@@ -18,11 +18,15 @@ fi
 # Select prompt file based on mode
 if [ "$MODE" = "plan" ]; then
     PROMPT_FILE="PROMPT_plan.md"
+    LOG_FILE="ralph_plan.log"
     echo "=== Ralph Planning Phase ==="
 else
     PROMPT_FILE="PROMPT_build.md"
+    LOG_FILE="ralph_build.log"
     echo "=== Ralph Build Phase ==="
 fi
+
+CURRENT_BRANCH=$(git branch --show-current)
 
 if [ ! -f "$PROMPT_FILE" ]; then
     echo "Error: $PROMPT_FILE not found"
@@ -31,7 +35,9 @@ if [ ! -f "$PROMPT_FILE" ]; then
 fi
 
 echo "Prompt: $PROMPT_FILE"
+echo "Branch: $CURRENT_BRANCH"
 echo "Max iterations: $MAX_ITERATIONS"
+echo "Log: $LOG_FILE"
 echo ""
 
 ITERATION=0
@@ -43,17 +49,35 @@ while [ $ITERATION -lt $MAX_ITERATIONS ]; do
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
     # Run Claude with the prompt file
-    # The --prompt flag reads the file content as the initial prompt
-    if claude --prompt "$(cat $PROMPT_FILE)" --allowedTools "Read,Write,Edit,Bash,Glob,Grep,Task,WebFetch"; then
+    stty sane 2>/dev/null  # Reset terminal
+    if claude -p \
+        --dangerously-skip-permissions \
+        --output-format=stream-json \
+        --model opus \
+        --verbose < "$PROMPT_FILE" 2>&1 | tee -a "$LOG_FILE" | jq -r '
+          if .type == "assistant" and .message.content then
+            (.message.content[] | select(.type == "text") | "💬 " + .text) // empty
+          elif .type == "result" then
+            "✅ Cost: $" + (.total_cost_usd | tostring) + " | Turns: " + (.num_turns | tostring)
+          elif .error then
+            "❌ " + .error
+          else empty end
+        ' 2>/dev/null; then
         echo ""
         echo "Iteration $ITERATION completed successfully"
     else
         echo ""
-        echo "Iteration $ITERATION exited with error (this is normal for Ralph)"
+        echo "Iteration $ITERATION exited (this is normal for Ralph)"
+    fi
+    stty sane 2>/dev/null  # Reset terminal after
+
+    # Push changes if remote exists
+    if git remote get-url origin &>/dev/null; then
+        git push origin "$CURRENT_BRANCH" 2>/dev/null || git push -u origin "$CURRENT_BRANCH" 2>/dev/null || true
     fi
 
     echo ""
-    sleep 2  # Brief pause between iterations
+    sleep 5  # Brief pause between iterations
 done
 
 echo ""
@@ -62,4 +86,4 @@ echo "Completed $ITERATION iterations"
 echo ""
 echo "Review your changes:"
 echo "  git log --oneline -10"
-echo "  git diff HEAD~5"
+echo "  git diff main...HEAD"
