@@ -1,0 +1,11 @@
+{
+  "name": "ralph-wiggum",
+  "version": "1.0.0",
+  "description": "Ralph Wiggum technique for iterative AI development loops. Set up specs, prompts, and automation for autonomous coding sessions.",
+  "author": {
+    "name": "Shipdeckai",
+    "url": "https://github.com/shipdeckai"
+  },
+  "repository": "https://github.com/shipdeckai/ralph-wiggum",
+  "keywords": ["ralph", "automation", "iterative", "development", "specs", "loop"]
+}
