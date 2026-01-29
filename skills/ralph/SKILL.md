@@ -111,6 +111,15 @@ For each topic, create `specs/[topic].md` using this template:
 
 Ask user to confirm each spec before creating the next.
 
+**Spec Scoping Test: "One Sentence Without 'And'"**
+
+Before creating a spec, validate its scope:
+- Can you describe it in one sentence without conjoining unrelated capabilities?
+- ✓ "The authentication system handles user login and session management"
+- ✗ "The user system handles authentication, profiles, and billing" → Split into 3 specs
+
+If you need "and" to connect unrelated capabilities, it's multiple specs.
+
 ### A4. Create Configuration Files
 
 Copy the template files from this skill's `files/` directory:
@@ -174,6 +183,15 @@ For each topic, create `specs/[topic].md`:
 
 Ask user to confirm each spec.
 
+**Spec Scoping Test: "One Sentence Without 'And'"**
+
+Before creating a spec, validate its scope:
+- Can you describe it in one sentence without conjoining unrelated capabilities?
+- ✓ "The authentication system handles user login and session management"
+- ✗ "The user system handles authentication, profiles, and billing" → Split into 3 specs
+
+If you need "and" to connect unrelated capabilities, it's multiple specs.
+
 ### B3. Create Configuration Files
 
 ```bash
@@ -235,4 +253,7 @@ The following files are templates to copy into the user's project:
 - [files/PROMPT_build.md](files/PROMPT_build.md) - Build phase prompt
 - [files/AGENTS.md](files/AGENTS.md) - Build commands template
 
-See [references/philosophy.md](references/philosophy.md) for the Ralph methodology background.
+### Background & Advanced Topics
+
+- [references/philosophy.md](references/philosophy.md) - Ralph methodology, context management, steering patterns
+- [references/sandbox-environments.md](references/sandbox-environments.md) - Secure sandbox options (E2B, Sprites, Modal, Docker)

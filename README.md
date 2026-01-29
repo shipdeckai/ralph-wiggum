@@ -149,6 +149,7 @@ Brief description of what this feature does.
 - **Review IMPLEMENTATION_PLAN.md** - Check progress between loop runs
 - **Set realistic iterations** - Start with 10-20, increase as needed
 - **Trust the process** - Ralph improves through iteration, not perfection
+- **Scope test** - If a spec needs "and" to describe, split it into multiple specs
 
 ## Philosophy
 
@@ -156,6 +157,17 @@ Brief description of what this feature does.
 2. **Failures Are Data** - Use them to improve specs
 3. **Persistence Wins** - The loop handles retries
 4. **Self-Referential Improvement** - Each iteration sees previous work
+5. **Context Is Everything** - Keep tasks tight for smart zone utilization
+6. **Steer With Backpressure** - Tests/lints reject invalid work automatically
+
+## Advanced Topics
+
+The plugin includes detailed guides on:
+
+- **Context Management** - How to maximize the ~176K usable tokens
+- **Steering Patterns** - Upstream (specs, code patterns) and downstream (tests, lints)
+- **Sandbox Environments** - Running Ralph securely in E2B, Sprites, Modal, Docker
+- **Escape Hatches** - Ctrl+C, git reset, plan regeneration
 
 ## License
 
